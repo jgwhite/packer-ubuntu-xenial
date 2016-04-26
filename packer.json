@@ -1,0 +1,27 @@
+{
+  "builders": [{
+    "type": "virtualbox-iso",
+    "vboxmanage": [
+      ["modifyvm", "{{.Name}}", "--memory", "1024"],
+      ["modifyvm", "{{.Name}}", "--cpus", "2"]
+    ],
+    "guest_os_type": "Ubuntu_64",
+    "iso_url": "http://releases.ubuntu.com/16.04/ubuntu-16.04-server-amd64.iso",
+    "iso_checksum": "b8b172cbdf04f5ff8adc8c2c1b4007ccf66f00fc6a324a6da6eba67de71746f6",
+    "iso_checksum_type": "sha256",
+    "ssh_username": "packer",
+    "ssh_password": "packer",
+    "boot_command" : [
+      "<enter><f6><enter><esc>",
+      "/install/vmlinuz noapic ",
+      "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+      "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+      "hostname={{ .Name }} ",
+      "fb=false debconf/frontend=noninteractive ",
+      "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+      "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+      "initrd=/install/initrd.gz -- <enter>"
+    ],
+    "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+  }]
+}
